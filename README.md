@@ -1,9 +1,9 @@
-Ansible Role: (Centos) System Upgrade
+Ansible Role: (CentOS/RedHat) System Upgrade
 =========
 
-**Perform upgrade of all software packages on Centos host.**
+**Perform upgrade of all software packages on CentOS/RedHat host.**
 
-This Ansible role will perform upgrade of all software packages on Centos host. After which it will reboot host (only if required). If reboot was performed, it'll wait until host is back-up.
+This Ansible role will perform upgrade of all software packages on CentOS/RedHat host. After which it will reboot host (only if required). If reboot was performed, it'll wait until host is back-up.
 
   * Perform upgrade of all packages to the latest version (dist)
   * Check if a reboot is required, if it is reboot the host/server

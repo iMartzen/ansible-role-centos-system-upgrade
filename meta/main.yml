@@ -1,6 +1,6 @@
 galaxy_info:
   author: iMartzen
-  description: Perform upgrade of all software packages on Centos host
+  description: Perform upgrade of all software packages on CentOS/RedHat host
 
   license: GPLv3
 
@@ -10,10 +10,15 @@ galaxy_info:
   - name: Centos
     versions:
     - all
+  - name: Redhat 
+    versions:
+    - all
 
   galaxy_tags:
   - development
   - system
   - centos
+  - redhat
+  - rhel
   - packages
   - upgrade
