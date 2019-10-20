@@ -44,4 +44,4 @@
   when: reboot_flag.stat.exists == true or 'required' in reboot_required.stdout 
 
 - debug:
-  msg: "Server is back up and running"
+   msg: "Server is back up and running"
