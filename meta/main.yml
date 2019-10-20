@@ -1,12 +1,18 @@
 galaxy_info:
-  author: iMartzen
-  description: Perform upgrade of all software packages on CentOS/RedHat host
+  author: Adnan Hodzic & iMartzen
+  description: Perform upgrade of all software packages on Ubuntu/Debian/CentOS/RedHat host
 
   license: GPLv3
 
   min_ansible_version: 2.0
 
   platforms:
+  - name: Ubuntu
+    versions: 
+    - all 
+  - name: Debian
+    versions: 
+    - all 
   - name: Centos
     versions:
     - all
@@ -17,6 +23,8 @@ galaxy_info:
   galaxy_tags:
   - development
   - system
+  - ubuntu
+  - debian
   - centos
   - redhat
   - rhel

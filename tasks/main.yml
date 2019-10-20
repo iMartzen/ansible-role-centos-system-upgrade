@@ -1,16 +1,47 @@
 ---
+
+# Ubuntu/Debian update packages 
+- name: Update APT cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+
+- name: Check if there are available updates
+  command: /usr/lib/update-notifier/apt-check --package-names
+  register: pkg_list
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian' 
+
+- name: Perform upgrade of all packages to the latest version
+  apt:
+    upgrade: dist
+  when: pkg_list.stderr != "" and ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian' 
+
+# CentOS/RedHat update packages 
 - name: Update all packages 
   yum:
     update_cache: yes
     name: '*'
     state: latest
+  when: ansible_distribution == 'Centos' or ansible_distribution == 'RedHat' 
 
-- name: Check if reboot is required
+# Ubuntu/Debian reboot check 
+- name: Check if a reboot is required
+  stat: path=/var/run/reboot-required get_md5=no
+  register: reboot_flag
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian' 
+
+# CentOS/RedHat reboot check 
+- name: Check if a reboot is required
   shell: needs-restarting -r
   ignore_errors: true 
   register: reboot_required
 
+# Reboot of the server 
 - name: Reboot the server is needed
   reboot:
     reboot_timeout: 300
-  when: "'required' in reboot_required.stdout"
+  when: reboot_flag.stat.exists == true or 'required' in reboot_required.stdout 
+
+- debug:
+  msg: "Server is back up and running"
