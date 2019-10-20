@@ -1,21 +1,31 @@
 ---
 
-# Ubuntu/Debian update packages 
+# Ubuntu/Debian update/upgrade packages 
 - name: Update APT packages
   apt:
     update_cache: yes
     cache_valid_time: 3600
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+
+- name: Upgrade APT packages 
+  apt: 
     name: "*"
     state: latest
-  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+  ignore_errors: yes #TODO: CHECK WHY IT IS FAILING WHEN IT CANNOT UPGRADE
+  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian' 
 
 # CentOS/RedHat update packages 
 - name: Update YUM packages 
   yum:
     update_cache: yes
     cache_valid_time: 3600
+  when: ansible_distribution == 'Centos' or ansible_distribution == 'RedHat' 
+
+- name: Upgrade YUM packages
+  yum: 
     name: "*"
     state: latest
+  ignore_errors: yes #TODO: CHECK WHY IT IS FAILING WHEN IT CANNOT UPGRADE
   when: ansible_distribution == 'Centos' or ansible_distribution == 'RedHat' 
 
 # Ubuntu/Debian reboot check 
@@ -28,14 +38,20 @@
 - name: Check if a reboot is required for CentOS/RedHat
   shell: needs-restarting -r
   ignore_errors: true 
-  register: reboot_required
+  register: reboot_flag
   when: ansible_distribution == 'Centos' or ansible_distribution == 'RedHat' 
 
-# Reboot of the server 
-- name: Reboot the server is needed
+# Reboot of the Ubuntu/Debian server 
+- name: Reboot the Ubuntu/Debian server is needed
   reboot:
     reboot_timeout: 300
-  when: reboot_flag.stat.exists == true or 'required' in reboot_required.stdout 
+  when: (reboot_flag == true and (ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'))
+
+# Reboot of the CentOS/RedHat server
+- name: Reboot the CentOS/RedHat server is needed
+  reboot: 
+   reboot_timeout: 300
+  when: ("'required' in reboot_required.stdout" and (ansible_distribution == 'Centos' or ansible_distribution == 'RedHat'))
 
 - debug:
    msg: "Server is back up and running"
